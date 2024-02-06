@@ -13,6 +13,10 @@ export const cancelOrder = async (orderId: number): Promise<void> => {
   await orderRepository.cancelOrder(orderId);
 };
 
+export const getAllOrders = async (): Promise<Order[]> => {
+  return await orderRepository.getAllOrders();
+};
+
 export const getOrdersByCustomer = async (
   customerId: number,
   offset: number,

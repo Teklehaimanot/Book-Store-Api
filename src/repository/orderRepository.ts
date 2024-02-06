@@ -83,6 +83,15 @@ export const cancelOrder = async (orderId: number): Promise<void> => {
   }
 };
 
+export const getAllOrders = async (): Promise<Order[]> => {
+  try {
+    const { rows } = await pool.query("SELECT * FROM orders");
+    return rows;
+  } catch (error: any) {
+    throw new Error("Error fetching orders: " + error.message);
+  }
+};
+
 export const getOrdersByCustomer = async (
   customerId: number,
   offset: number,

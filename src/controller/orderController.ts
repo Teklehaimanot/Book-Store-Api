@@ -44,6 +44,19 @@ export const cancelOrder = async (
   }
 };
 
+export const getAllOrders = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const orders = await orderService.getAllOrders();
+    res.json(orders);
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 export const getOrdersByCustomer = async (
   req: Request,
   res: Response

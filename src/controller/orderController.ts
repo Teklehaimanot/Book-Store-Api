@@ -21,7 +21,9 @@ export const createOrder = async (
   } catch (error: any) {
     if (error.message.includes("not found")) {
       res.status(404).json({ error: error.message });
-    } else if (error.message.startsWith("Book")) {
+    } else if (error.message.includes("Book")) {
+      res.status(404).json({ error: error.message });
+    } else if (error.message.includes("not have enough points")) {
       res.status(404).json({ error: error.message });
     } else {
       console.error("Error creating order:", error);

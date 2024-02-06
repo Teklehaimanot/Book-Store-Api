@@ -12,7 +12,7 @@ export const createCustomer = async (
       res.status(400).json({ eror: "All fields are required" });
       return;
     }
-    const initialPoints = 100;
+    const initialPoints: number = 100;
     const createdCustomer: Customer = await customerService.createCustomer(
       name,
       email,
@@ -45,7 +45,7 @@ export const getCustomerById = async (
   req: Request,
   res: Response
 ): Promise<void> => {
-  const customerId: string = req.params.customerId;
+  const customerId: number = parseFloat(req.params.customerId);
   try {
     const customer: Customer | null = await customerService.getCustomerById(
       customerId
@@ -118,7 +118,7 @@ export const deleteCustomer = async (
   req: Request,
   res: Response
 ): Promise<void> => {
-  const customerId: string = req.params.customerId;
+  const customerId: number = parseFloat(req.params.customerId);
   try {
     const customer: Customer | null = await customerService.getCustomerById(
       customerId

@@ -17,3 +17,13 @@ export async function createBook(book: Book): Promise<Book> {
   const { rows } = await pool.query(query, values);
   return rows[0];
 }
+
+export const getBookById = async (bookId: number): Promise<Book | null> => {
+  try {
+    const query = "SELECT * FROM books WHERE id = $1";
+    const { rows } = await pool.query(query, [bookId]);
+    return rows.length ? rows[0] : null;
+  } catch (error: any) {
+    throw new Error("Error fetching book: " + error.message);
+  }
+};

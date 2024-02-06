@@ -35,7 +35,7 @@ export const createCustomer = async (
 };
 
 export const getCustomerById = async (
-  customerId: string
+  customerId: number
 ): Promise<Customer | null> => {
   try {
     const query = "SELECT * FROM customers WHERE id = $1";
@@ -87,7 +87,25 @@ export const updateCustomer = async (
   }
 };
 
-export const deleteCustomer = async (customerId: string): Promise<void> => {
+export const updateCustomerPoints = async (
+  customerId: number,
+  initialPoints: number
+): Promise<void> => {
+  console.log(initialPoints);
+  try {
+    if (isNaN(initialPoints) || initialPoints < 0) {
+      throw new Error("Invalid initial points value");
+    }
+
+    const query = "UPDATE customers SET initialPoints = $1 WHERE id = $2";
+    const values = [initialPoints, customerId];
+    await pool.query(query, values);
+  } catch (error: any) {
+    throw new Error("Error updating customer initialPoints: " + error.message);
+  }
+};
+
+export const deleteCustomer = async (customerId: number): Promise<void> => {
   try {
     const query = "DELETE FROM customers WHERE id = $1";
     await pool.query(query, [customerId]);

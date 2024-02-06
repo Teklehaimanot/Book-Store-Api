@@ -1,6 +1,8 @@
 import { Pool } from "pg";
 import Order from "../entity/Order";
 import config from "../config";
+import * as customerRepository from "../repository/customerRepository";
+import * as bookRepository from "../repository/bookRepository";
 
 const pool = new Pool(config.db);
 
@@ -15,9 +17,9 @@ export const createOrder = async (
     await client.query("BEGIN");
 
     // Check if customer exists
-    const customerQuery = "SELECT id FROM customers WHERE id = $1";
-    const customerResult = await client.query(customerQuery, [customerId]);
-    if (customerResult.rows.length === 0) {
+    const customer = await customerRepository.getCustomerById(customerId);
+    console.log(customer);
+    if (!customer) {
       throw new Error(`Customer with ID ${customerId} not found`);
     }
 
@@ -27,15 +29,26 @@ export const createOrder = async (
       const quantity = quantities[i];
 
       // Check if book exists
-      const bookQuery = "SELECT point FROM books WHERE id = $1";
-      const bookResult = await client.query(bookQuery, [bookId]);
-      if (bookResult.rows.length === 0) {
+      const book = await bookRepository.getBookById(bookId);
+      if (!book) {
         throw new Error(`Book with ID ${bookId} not found`);
       }
 
-      const bookPrice = parseFloat(bookResult.rows[0].point);
+      const bookPrice = book.point;
       totalAmount += bookPrice * quantity;
     }
+
+    // Check if customer has enough points
+    if (customer.initialpoints < totalAmount) {
+      throw new Error(
+        `Customer does not have enough points to make the purchase`
+      );
+    }
+
+    // Deduct points from customer's account
+    const remainingPoints = customer.initialpoints - totalAmount;
+    console.log(customer.initialpoints, totalAmount);
+    await customerRepository.updateCustomerPoints(customerId, remainingPoints);
 
     const orderQuery =
       "INSERT INTO orders (customer_id, total_amount, status) VALUES ($1, $2, $3) RETURNING id";

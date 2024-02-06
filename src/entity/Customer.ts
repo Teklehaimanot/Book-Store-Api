@@ -5,7 +5,7 @@ class Customer {
     public email: string,
     public address: string,
     public phone: string,
-    public initialPoints: number
+    public initialpoints: number
   ) {}
 }
 

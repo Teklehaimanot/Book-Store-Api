@@ -24,7 +24,7 @@ export const getAllCustomers = async (): Promise<Customer[]> => {
 };
 
 export const getCustomerById = async (
-  customerId: string
+  customerId: number
 ): Promise<Customer | null> => {
   return await customerRepository.getCustomerById(customerId);
 };
@@ -59,6 +59,6 @@ export const updateCustomer = async (
   );
 };
 
-export const deleteCustomer = async (customerId: string): Promise<void> => {
+export const deleteCustomer = async (customerId: number): Promise<void> => {
   await customerRepository.deleteCustomer(customerId);
 };

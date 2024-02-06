@@ -8,6 +8,10 @@ export const createCustomer = async (
 ): Promise<void> => {
   const { name, email, address, phone } = req.body;
   try {
+    if (!name || !email || !address || !phone) {
+      res.status(400).json({ eror: "All fields are required" });
+      return;
+    }
     const createdCustomer: Customer = await customerService.createCustomer(
       name,
       email,
@@ -61,6 +65,10 @@ export const updateCustomer = async (
   const customerId: string = req.params.customerId;
   const { name, email, address, phone } = req.body;
   try {
+    if (!name || !email || !address || !phone) {
+      res.status(400).json({ eror: "All fields are required" });
+      return;
+    }
     const updatedCustomer: Customer | null =
       await customerService.updateCustomer(
         customerId,
@@ -86,6 +94,13 @@ export const deleteCustomer = async (
 ): Promise<void> => {
   const customerId: string = req.params.customerId;
   try {
+    const customer: Customer | null = await customerService.getCustomerById(
+      customerId
+    );
+    if (!customer) {
+      res.status(404).json({ error: "Customer not found" });
+      return;
+    }
     await customerService.deleteCustomer(customerId);
     res.status(204).send(); // No content
   } catch (error) {

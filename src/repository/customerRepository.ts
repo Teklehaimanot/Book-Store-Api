@@ -9,25 +9,28 @@ export const createCustomer = async (
   email: string,
   address: string,
   phone: string,
-  password: string
+  password: string,
+  initialPoints: number
 ): Promise<Customer> => {
+  let client;
   try {
+    client = await pool.connect();
+    await client.query("BEGIN");
     const query =
-      "INSERT INTO customers (name, email, address, phone, password) VALUES ($1, $2, $3, $4, $5) RETURNING *";
-    const values = [name, email, address, phone, password];
-    const { rows } = await pool.query(query, values);
+      "INSERT INTO customers (name, email, address, phone, password, initialPoints) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *";
+    const values = [name, email, address, phone, password, initialPoints];
+    const { rows } = await client.query(query, values);
+    await client.query("COMMIT");
     return rows[0];
   } catch (error: any) {
+    if (client) {
+      await client.query("ROLLBACK");
+    }
     throw new Error("Error creating customer: " + error.message);
-  }
-};
-
-export const getAllCustomers = async (): Promise<Customer[]> => {
-  try {
-    const { rows } = await pool.query("SELECT * FROM customers");
-    return rows;
-  } catch (error: any) {
-    throw new Error("Error fetching customers: " + error.message);
+  } finally {
+    if (client) {
+      client.release();
+    }
   }
 };
 
@@ -40,6 +43,15 @@ export const getCustomerById = async (
     return rows[0] || null;
   } catch (error: any) {
     throw new Error("Error fetching customer: " + error.message);
+  }
+};
+
+export const getAllCustomers = async (): Promise<Customer[]> => {
+  try {
+    const { rows } = await pool.query("SELECT * FROM customers");
+    return rows;
+  } catch (error: any) {
+    throw new Error("Error fetching customers: " + error.message);
   }
 };
 

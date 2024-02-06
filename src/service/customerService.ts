@@ -6,14 +6,16 @@ export const createCustomer = async (
   email: string,
   address: string,
   phone: string,
-  password: string
+  password: string,
+  initialPoints: number
 ): Promise<Customer> => {
   return await customerRepository.createCustomer(
     name,
     email,
     address,
     phone,
-    password
+    password,
+    initialPoints
   );
 };
 

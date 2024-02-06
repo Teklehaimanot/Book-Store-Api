@@ -12,12 +12,14 @@ export const createCustomer = async (
       res.status(400).json({ eror: "All fields are required" });
       return;
     }
+    const initialPoints = 100;
     const createdCustomer: Customer = await customerService.createCustomer(
       name,
       email,
       address,
       phone,
-      password
+      password,
+      initialPoints
     );
     res.status(201).json(createdCustomer);
   } catch (error) {

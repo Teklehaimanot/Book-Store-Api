@@ -5,9 +5,16 @@ export const createCustomer = async (
   name: string,
   email: string,
   address: string,
-  phone: string
+  phone: string,
+  password: string
 ): Promise<Customer> => {
-  return await customerRepository.createCustomer(name, email, address, phone);
+  return await customerRepository.createCustomer(
+    name,
+    email,
+    address,
+    phone,
+    password
+  );
 };
 
 export const getAllCustomers = async (): Promise<Customer[]> => {
@@ -20,19 +27,33 @@ export const getCustomerById = async (
   return await customerRepository.getCustomerById(customerId);
 };
 
+export const loginCustomer = async (
+  email: string,
+  password: string
+): Promise<Customer | null> => {
+  try {
+    const customer = await customerRepository.loginCustomer(email, password);
+    return customer;
+  } catch (error: any) {
+    throw new Error("Error logging in customer: " + error.message);
+  }
+};
+
 export const updateCustomer = async (
   customerId: string,
   name: string,
   email: string,
   address: string,
-  phone: string
+  phone: string,
+  password: string
 ): Promise<Customer | null> => {
   return await customerRepository.updateCustomer(
     customerId,
     name,
     email,
     address,
-    phone
+    phone,
+    password
   );
 };
 

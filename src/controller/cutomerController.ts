@@ -6,9 +6,9 @@ export const createCustomer = async (
   req: Request,
   res: Response
 ): Promise<void> => {
-  const { name, email, address, phone } = req.body;
+  const { name, email, address, phone, password } = req.body;
   try {
-    if (!name || !email || !address || !phone) {
+    if (!name || !email || !address || !phone || !password) {
       res.status(400).json({ eror: "All fields are required" });
       return;
     }
@@ -16,7 +16,8 @@ export const createCustomer = async (
       name,
       email,
       address,
-      phone
+      phone,
+      password
     );
     res.status(201).json(createdCustomer);
   } catch (error) {
@@ -58,12 +59,34 @@ export const getCustomerById = async (
   }
 };
 
+export const loginCustomer = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const { email, password } = req.body;
+  try {
+    if (!email || !password) {
+      res.status(400).json({ error: "Email and password are required" });
+      return;
+    }
+    const customer = await customerService.loginCustomer(email, password);
+    if (customer) {
+      res.json(customer); // Return customer data on successful login
+    } else {
+      res.status(401).json({ error: "Invalid email or password" });
+    }
+  } catch (error) {
+    console.error("Error logging in customer:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 export const updateCustomer = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   const customerId: string = req.params.customerId;
-  const { name, email, address, phone } = req.body;
+  const { name, email, address, phone, password } = req.body;
   try {
     if (!name || !email || !address || !phone) {
       res.status(400).json({ eror: "All fields are required" });
@@ -75,7 +98,8 @@ export const updateCustomer = async (
         name,
         email,
         address,
-        phone
+        phone,
+        password
       );
     if (!updatedCustomer) {
       res.status(404).json({ error: "Customer not found" });

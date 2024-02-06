@@ -4,7 +4,8 @@ class Customer {
     public name: string,
     public email: string,
     public address: string,
-    public phone: string
+    public phone: string,
+    public password: string
   ) {}
 }
 

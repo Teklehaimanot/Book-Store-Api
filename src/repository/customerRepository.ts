@@ -8,12 +8,13 @@ export const createCustomer = async (
   name: string,
   email: string,
   address: string,
-  phone: string
+  phone: string,
+  password: string
 ): Promise<Customer> => {
   try {
     const query =
-      "INSERT INTO customers (name, email, address, phone) VALUES ($1, $2, $3, $4) RETURNING *";
-    const values = [name, email, address, phone];
+      "INSERT INTO customers (name, email, address, phone, password) VALUES ($1, $2, $3, $4, $5) RETURNING *";
+    const values = [name, email, address, phone, password];
     const { rows } = await pool.query(query, values);
     return rows[0];
   } catch (error: any) {
@@ -42,17 +43,31 @@ export const getCustomerById = async (
   }
 };
 
+export const loginCustomer = async (
+  email: string,
+  password: string
+): Promise<Customer | null> => {
+  try {
+    const query = "SELECT * FROM customers WHERE email = $1 AND password = $2";
+    const { rows } = await pool.query(query, [email, password]);
+    return rows.length ? rows[0] : null;
+  } catch (error: any) {
+    throw new Error("Error logging in customer: " + error.message);
+  }
+};
+
 export const updateCustomer = async (
   customerId: string,
   name: string,
   email: string,
   address: string,
-  phone: string
+  phone: string,
+  password: string
 ): Promise<Customer | null> => {
   try {
     const query =
-      "UPDATE customers SET name = $1, email = $2, address = $3, phone = $4 WHERE id = $5 RETURNING *";
-    const values = [name, email, address, phone, customerId];
+      "UPDATE customers SET name = $1, email = $2, address = $3, phone = $4, password = $5 WHERE id = $6 RETURNING *";
+    const values = [name, email, address, phone, password, customerId]; // Correct the order of parameters
     const { rows } = await pool.query(query, values);
     return rows[0] || null;
   } catch (error: any) {

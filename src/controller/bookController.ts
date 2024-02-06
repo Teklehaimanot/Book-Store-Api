@@ -14,6 +14,7 @@ export async function createBook(req: Request, res: Response): Promise<void> {
   }
   if (!title || !writer || !coverImage || !point || !tags) {
     res.status(400).json({ error: "All fields are required" });
+    return;
   }
   try {
     const createdBook = await bookService.createBook(

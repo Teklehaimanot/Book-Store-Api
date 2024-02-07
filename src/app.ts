@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import bookRoutes from "./route/bookRoutes";
 import cutomerRoutes from "./route/cutomerRoute";
 import orderRoutes from "./route/orderRoutes";
@@ -43,6 +44,7 @@ try {
 }
 
 app.use(express.json());
+app.use(cors());
 
 app.use("/api/v1/books", bookRoutes);
 app.use("/api/v1/customers", cutomerRoutes);

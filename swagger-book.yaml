@@ -8,16 +8,45 @@ servers:
 paths:
   /api/v1/books:
     get:
-      summary: Get all books
+      summary: Get all books with pagination
+      parameters:
+        - in: query
+          name: page
+          required: false
+          schema:
+            type: integer
+            default: 1
+          description: Page number
+        - in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+            default: 10
+          description: Number of items per page
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Book"
+                type: object
+                properties:
+                  books:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Book"
+                  totalPages:
+                    type: integer
+                    description: Total number of pages
+                  nextPage:
+                    type: integer
+                    nullable: true
+                    description: Page number of the next page
+                  prevPage:
+                    type: integer
+                    nullable: true
+                    description: Page number of the previous page
     post:
       summary: Create a new book
       requestBody:

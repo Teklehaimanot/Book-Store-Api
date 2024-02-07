@@ -4,9 +4,20 @@ import config from "../config";
 
 const pool = new Pool(config.db);
 
-export const getAllBooks = async (): Promise<Book[]> => {
-  const { rows } = await pool.query("SELECT * FROM books");
+export const getAllBooks = async (
+  offset: number,
+  limit: number
+): Promise<Book[]> => {
+  const { rows } = await pool.query("SELECT * FROM books LIMIT $1 OFFSET $2", [
+    limit,
+    offset,
+  ]);
   return rows;
+};
+
+export const getTotalCount = async (): Promise<number> => {
+  const { rows } = await pool.query("SELECT COUNT(*) FROM books");
+  return parseInt(rows[0].count);
 };
 
 export const createBook = async (book: Book): Promise<Book> => {

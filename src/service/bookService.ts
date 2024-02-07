@@ -1,8 +1,13 @@
 import Book from "../entity/Book";
 import * as bookRepository from "../repository/bookRepository";
 
-export const getAllBooks = async (): Promise<Book[]> => {
-  return await bookRepository.getAllBooks();
+export const getAllBooks = async (
+  offset: number,
+  limit: number
+): Promise<{ books: Book[]; totalCount: number }> => {
+  const books = await bookRepository.getAllBooks(offset, limit);
+  const totalCount = await bookRepository.getTotalCount();
+  return { books, totalCount };
 };
 
 export const createBook = async (

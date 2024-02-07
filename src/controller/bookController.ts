@@ -37,8 +37,17 @@ export const createBook = async (
 
 export const getBooks = async (req: Request, res: Response): Promise<void> => {
   try {
-    const books = await bookService.getAllBooks();
-    res.json(books);
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const offset = (page - 1) * limit;
+
+    const { books, totalCount } = await bookService.getAllBooks(offset, limit);
+
+    const totalPages = Math.ceil(totalCount / limit);
+    const nextPage = page < totalPages ? page + 1 : null;
+    const prevPage = page > 1 ? page - 1 : null;
+
+    res.json({ books, totalPages, nextPage, prevPage });
   } catch (error) {
     console.error("Error fetching books:", error);
     res.status(500).json({ error: "Internal server error" });

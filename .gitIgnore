@@ -1,10 +1,1 @@
-#backe end
-bookstore-api/.env
-bookstore-api/node_modules
-bookstore-api/dist
-bookstore-api/.DS_Store
-#front end
-bookstore-client/node_modules
-bookstore-client/.DS_Store
-bookstore-client/.env
-
+.env

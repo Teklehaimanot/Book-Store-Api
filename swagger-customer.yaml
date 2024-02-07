@@ -34,6 +34,24 @@ paths:
               schema:
                 $ref: "#/components/schemas/Customer"
   /api/v1/customers/{customerId}:
+    get:
+      summary: Get a customer by ID
+      parameters:
+        - in: path
+          name: customerId
+          required: true
+          description: The ID of the customer to retrieve
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+        "404":
+          description: Not Found
     put:
       summary: Update an existing customer
       parameters:
@@ -68,6 +86,24 @@ paths:
       responses:
         "204":
           description: No Content
+  /api/v1/customers/login:
+    post:
+      summary: Customer login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginCredentials"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+        "401":
+          description: Unauthorized
 components:
   schemas:
     Customer:
@@ -108,6 +144,15 @@ components:
         phone:
           type: string
           description: The phone number of the customer.
+        password:
+          type: string
+          description: The password of the customer.
+    LoginCredentials:
+      type: object
+      properties:
+        email:
+          type: string
+          description: The email address of the customer.
         password:
           type: string
           description: The password of the customer.

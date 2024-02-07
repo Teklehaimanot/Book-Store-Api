@@ -17,7 +17,7 @@ export const createCustomer = async (
     client = await pool.connect();
     await client.query("BEGIN");
     const query =
-      "INSERT INTO customers (name, email, address, phone, password, initialPoints) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *";
+      "INSERT INTO customers (name, email, address, phone, password, initialPoints) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, name, email, address, phone, initialPoints";
     const values = [name, email, address, phone, password, initialPoints];
     const { rows } = await client.query(query, values);
     await client.query("COMMIT");
@@ -48,7 +48,9 @@ export const getCustomerById = async (
 
 export const getAllCustomers = async (): Promise<Customer[]> => {
   try {
-    const { rows } = await pool.query("SELECT * FROM customers");
+    const { rows } = await pool.query(
+      "SELECT id, name, email, address, phone, initialPoints FROM customers"
+    );
     return rows;
   } catch (error: any) {
     throw new Error("Error fetching customers: " + error.message);
@@ -78,7 +80,7 @@ export const updateCustomer = async (
 ): Promise<Customer | null> => {
   try {
     const query =
-      "UPDATE customers SET name = $1, email = $2, address = $3, phone = $4, password = $5 WHERE id = $6 RETURNING *";
+      "UPDATE customers SET name = $1, email = $2, address = $3, phone = $4, password = $5 WHERE id = $6  RETURNING id, name, email, address, phone, initialPoints";
     const values = [name, email, address, phone, password, customerId]; // Correct the order of parameters
     const { rows } = await pool.query(query, values);
     return rows[0] || null;

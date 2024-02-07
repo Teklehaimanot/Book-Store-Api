@@ -1,0 +1,113 @@
+openapi: 3.0.0
+info:
+  title: Bookstore API - Customers
+  version: 1.0.0
+  description: APIs for managing customers in the bookstore.
+servers:
+  - url: http://localhost:5000
+paths:
+  /api/v1/customers:
+    get:
+      summary: Get all customers
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Customer"
+    post:
+      summary: Create a new customer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewCustomer"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+  /api/v1/customers/{customerId}:
+    put:
+      summary: Update an existing customer
+      parameters:
+        - in: path
+          name: customerId
+          required: true
+          description: The ID of the customer to update
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewCustomer"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+    delete:
+      summary: Delete an existing customer
+      parameters:
+        - in: path
+          name: customerId
+          required: true
+          description: The ID of the customer to delete
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: No Content
+components:
+  schemas:
+    Customer:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The customer ID.
+        name:
+          type: string
+          description: The name of the customer.
+        email:
+          type: string
+          format: email
+          description: The email address of the customer.
+        address:
+          type: string
+          description: The address of the customer.
+        phone:
+          type: string
+          description: The phone number of the customer.
+        initialPoints:
+          type: integer
+          description: The initial points of the customer.
+    NewCustomer:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the customer.
+        email:
+          type: string
+          format: email
+          description: The email address of the customer.
+        address:
+          type: string
+          description: The address of the customer.
+        phone:
+          type: string
+          description: The phone number of the customer.
+        password:
+          type: string
+          description: The password of the customer.

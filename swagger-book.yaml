@@ -1,0 +1,138 @@
+openapi: 3.0.0
+info:
+  title: Bookstore API - Books
+  version: 1.0.0
+  description: APIs for managing books in the bookstore.
+servers:
+  - url: http://localhost:5000
+paths:
+  /api/v1/books:
+    get:
+      summary: Get all books
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Book"
+    post:
+      summary: Create a new book
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewBook"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Book"
+  /api/v1/books/{bookId}:
+    get:
+      summary: Get a book by ID
+      parameters:
+        - in: path
+          name: bookId
+          required: true
+          description: The ID of the book to retrieve
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Book"
+        "404":
+          description: Not Found
+    put:
+      summary: Update an existing book
+      parameters:
+        - in: path
+          name: bookId
+          required: true
+          description: The ID of the book to update
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewBook"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Book"
+    delete:
+      summary: Delete an existing book
+      parameters:
+        - in: path
+          name: bookId
+          required: true
+          description: The ID of the book to delete
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: No Content
+components:
+  schemas:
+    Book:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The book ID.
+        title:
+          type: string
+          description: The title of the book.
+        writer:
+          type: string
+          description: The writer of the book.
+        coverImage:
+          type: string
+          description: The URL of the book's cover image.
+        point:
+          type: number
+          description: The point of the book.
+        tags:
+          type: array
+          items:
+            type: string
+          description: Tags associated with the book.
+    NewBook:
+      type: object
+      properties:
+        title:
+          type: string
+          description: The title of the book.
+          default: "book-title"
+        writer:
+          type: string
+          description: The writer of the book.
+          default: "book-writer"
+        coverImage:
+          type: string
+          description: The URL of the book's cover image.
+          default: "https://images-na.ssl-images-amazon.com/images/I/51Ga5GuElyL._AC_SX184_.jpg"
+        point:
+          type: number
+          description: The point of the book.
+          default: 1
+        tags:
+          type: array
+          items:
+            type: string
+          description: Tags associated with the book.
+          default: ["fiction", "non-fiction", "science", "essay"]

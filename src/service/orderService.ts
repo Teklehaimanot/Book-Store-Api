@@ -17,6 +17,15 @@ export const getAllOrders = async (): Promise<Order[]> => {
   return await orderRepository.getAllOrders();
 };
 
+export const getOrderById = async (orderId: number): Promise<Order | null> => {
+  try {
+    const order = await orderRepository.getOrderById(orderId);
+    return order;
+  } catch (error: any) {
+    throw new Error("Error fetching order: " + error.message);
+  }
+};
+
 export const getOrdersByCustomer = async (
   customerId: number,
   offset: number,

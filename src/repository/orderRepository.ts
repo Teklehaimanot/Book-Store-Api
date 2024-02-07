@@ -105,6 +105,16 @@ export const getAllOrders = async (): Promise<Order[]> => {
   }
 };
 
+export const getOrderById = async (orderId: number): Promise<Order | null> => {
+  try {
+    const query = "SELECT * FROM orders WHERE id = $1";
+    const { rows } = await pool.query(query, [orderId]);
+    return rows.length ? rows[0] : null;
+  } catch (error: any) {
+    throw new Error("Error fetching order: " + error.message);
+  }
+};
+
 export const getOrdersByCustomer = async (
   customerId: number,
   offset: number,

@@ -13,6 +13,7 @@ const PORT = process.env.PORT || 5000;
 try {
   const swaggerCustomerDocument = YAML.load("./swagger-customer.yaml");
   const swaggerBookDocument = YAML.load("./swagger-book.yaml");
+  const swaggerOrderDocument = YAML.load("./swagger-order.yaml");
 
   app.use(
     "/api-docs/customers",
@@ -27,6 +28,14 @@ try {
     swaggerUi.serve,
     (req: any, res: any, next: any) => {
       swaggerUi.setup(swaggerBookDocument)(req, res, next);
+    }
+  );
+
+  app.use(
+    "/api-docs/orders",
+    swaggerUi.serve,
+    (req: any, res: any, next: any) => {
+      swaggerUi.setup(swaggerOrderDocument)(req, res, next);
     }
   );
 } catch (error) {

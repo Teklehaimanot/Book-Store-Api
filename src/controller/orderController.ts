@@ -53,7 +53,7 @@ export const cancelOrder = async (
     }
 
     await orderService.cancelOrder(orderId);
-    res.status(204).send(); // No content
+    res.status(204).json({ message: "Order cancellation successful" }); // No content
   } catch (error) {
     console.error("Error cancelling order:", error);
     res.status(500).json({ error: "Internal server error" });

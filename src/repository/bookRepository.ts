@@ -6,13 +6,25 @@ const pool = new Pool(config.db);
 
 export const getAllBooks = async (
   offset: number,
-  limit: number
-): Promise<Book[]> => {
-  const { rows } = await pool.query("SELECT * FROM books LIMIT $1 OFFSET $2", [
-    limit,
-    offset,
-  ]);
-  return rows;
+  limit: number,
+  title?: string
+): Promise<{ books: Book[]; totalCount: number }> => {
+  let query = "SELECT * FROM books";
+  let countQuery = "SELECT COUNT(*) FROM books";
+
+  const values: any[] = [];
+  if (title) {
+    query += " WHERE title ILIKE $1";
+    countQuery += " WHERE title ILIKE $1";
+    values.push(`%${title}%`);
+  }
+
+  query += ` OFFSET $${values.length + 1} LIMIT $${values.length + 2}`;
+
+  const { rows } = await pool.query(query, [...values, offset, limit]);
+  const { rows: countRows } = await pool.query(countQuery, values);
+
+  return { books: rows, totalCount: parseInt(countRows[0].count) };
 };
 
 export const getTotalCount = async (): Promise<number> => {

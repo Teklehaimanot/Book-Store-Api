@@ -3,11 +3,10 @@ import * as bookRepository from "../repository/bookRepository";
 
 export const getAllBooks = async (
   offset: number,
-  limit: number
+  limit: number,
+  title?: string
 ): Promise<{ books: Book[]; totalCount: number }> => {
-  const books = await bookRepository.getAllBooks(offset, limit);
-  const totalCount = await bookRepository.getTotalCount();
-  return { books, totalCount };
+  return await bookRepository.getAllBooks(offset, limit, title);
 };
 
 export const createBook = async (

@@ -40,8 +40,13 @@ export const getBooks = async (req: Request, res: Response): Promise<void> => {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
     const offset = (page - 1) * limit;
+    const title = req.query.title as string;
 
-    const { books, totalCount } = await bookService.getAllBooks(offset, limit);
+    const { books, totalCount } = await bookService.getAllBooks(
+      offset,
+      limit,
+      title
+    );
 
     const totalPages = Math.ceil(totalCount / limit);
     const nextPage = page < totalPages ? page + 1 : null;

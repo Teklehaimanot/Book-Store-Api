@@ -8,22 +8,23 @@ servers:
 paths:
   /api/v1/books:
     get:
-      summary: Get all books with pagination
+      summary: Get all books
       parameters:
         - in: query
           name: page
-          required: false
           schema:
             type: integer
-            default: 1
-          description: Page number
+          description: Page number for pagination
         - in: query
           name: limit
-          required: false
           schema:
             type: integer
-            default: 10
-          description: Number of items per page
+          description: Number of books per page
+        - in: query
+          name: title
+          schema:
+            type: string
+          description: Title to search for
       responses:
         "200":
           description: OK
@@ -41,12 +42,10 @@ paths:
                     description: Total number of pages
                   nextPage:
                     type: integer
-                    nullable: true
-                    description: Page number of the next page
+                    description: Next page number
                   prevPage:
                     type: integer
-                    nullable: true
-                    description: Page number of the previous page
+                    description: Previous page number
     post:
       summary: Create a new book
       requestBody:
